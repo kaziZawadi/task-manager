@@ -8,12 +8,12 @@ function App() {
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
 
+  const [filter, setFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
-
-  const [filter, setFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
 
   const filteredTasks = tasks.filter((task) => {
     const matchStatus =
@@ -48,6 +48,10 @@ function App() {
     setTasks(tasks.filter((task) => task.id !== id));
   }
 
+  const total = tasks.length;
+  const done = tasks.filter((task) => task.done).length;
+  const active = total - done;
+
   return (
     <div className="app">
       <h1>Task Manager</h1>
@@ -55,10 +59,31 @@ function App() {
       <TaskInput onAdd={addTask} />
 
       <div>
-        <button onClick={() => setFilter("all")}>Toutes</button>
-        <button onClick={() => setFilter("active")}>Actives</button>
-        <button onClick={() => setFilter("done")}>Terminées</button>
+        <button
+          onClick={() => setFilter("all")}
+          className={filter === "all" ? "active-filter" : ""}
+        >
+          Toutes
+        </button>
+
+        <button
+          onClick={() => setFilter("active")}
+          className={filter === "active" ? "active-filter" : ""}
+        >
+          Actives
+        </button>
+
+        <button
+          onClick={() => setFilter("done")}
+          className={filter === "done" ? "active-filter" : ""}
+        >
+          Terminées
+        </button>
       </div>
+
+      <p>
+        {active} active(s) / {done} terminée(s)
+      </p>
 
       <div>
         <button onClick={() => setCategoryFilter("all")}>Toutes</button>
