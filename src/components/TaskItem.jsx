@@ -1,4 +1,24 @@
-function TaskItem({ task, onToggle, onDelete }) {
+import { useState } from "react";
+
+function TaskItem({ task, onToggle, onDelete, onEdit }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingText, setEditingText] = useState(task.text);
+
+  function startEditing() {
+    setIsEditing(true);
+    setEditingText(task.text);
+  }
+
+  function saveEdit() {
+    onEdit(task.id, editingText);
+    setIsEditing(false);
+  }
+
+  function cancelEdit() {
+    setIsEditing(false);
+    setEditingText(task.text);
+  }
+
   return (
     <li>
       <input
@@ -6,14 +26,23 @@ function TaskItem({ task, onToggle, onDelete }) {
         checked={task.done}
         onChange={() => onToggle(task.id)}
       />
-      <span
-        style={{
-          textDecoration: task.done ? "line-through" : "none",
-          color: task.done ? "#999" : "#000",
-        }}
-      >
-        {task.text}
-      </span>
+      {isEditing ? (
+        <input
+          type="text"
+          value={editingText}
+          onChange={(e) => setEditingText(e.target.value)}
+          onBlur={saveEdit}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") saveEdit();
+            if (e.key === "Escape") cancelEdit();
+          }}
+          autoFocus
+        />
+      ) : (
+        <span onDoubleClick={startEditing} className={task.done ? "done" : ""}>
+          {task.text}
+        </span>
+      )}
       <small> ({task.category})</small>
 
       <button onClick={() => onDelete(task.id)}>❌</button>

@@ -34,3 +34,14 @@ button:hover {
   font-weight: bold;
   border: 2px solid #2563eb;
 }
+
+.done {
+  text-decoration: line-through;
+  color: #999;
+}
+
+li input[type="text"] {
+  padding: 4px 6px;
+  border: 1px solid #2563eb;
+  border-radius: 4px;
+}
